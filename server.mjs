@@ -27,9 +27,45 @@ const connectDB = async () => {
     });
     
     console.log("🍃 REAL CONNECTION ESTABLISHED: Successfully connected to MongoDB Cloud Database!");
+
+    // ⚡ RUN AUTOMATIC MIGRATION FOR EXISTING DATA
+    await runInitialMigration();
+
   } catch (error) {
     console.error("❌ MONGODB CONNECTION ERROR:", error.message);
     process.exit(1); 
+  }
+};
+
+// Migration logic to update your existing entries safely
+const runInitialMigration = async () => {
+  try {
+    const collection = mongoose.connection.collection('providers');
+    // Fetch records sorted chronologically by creation time
+    const list = await collection.find({}).sort({ createdAt: 1 }).toArray();
+    
+    const assignedYears = [9, 7, 8, 5, 9, 4];
+    let updatedCount = 0;
+
+    for (let i = 0; i < list.length; i++) {
+      if (assignedYears[i] !== undefined) {
+        await collection.updateOne(
+          { _id: list[i]._id },
+          { 
+            $set: { 
+              experience: Number(assignedYears[i]),
+              isAvailable: list[i].isAvailable !== undefined ? list[i].isAvailable : true
+            } 
+          }
+        );
+        updatedCount++;
+      }
+    }
+    if (updatedCount > 0) {
+      console.log(`🚀 MIGRATION SUCCESSFUL: Synchronized experience fields across ${updatedCount} profiles!`);
+    }
+  } catch (err) {
+    console.error("⚠️ Background migration warning:", err.message);
   }
 };
 
@@ -37,13 +73,16 @@ const connectDB = async () => {
 connectDB();
 
 // --- DEFINING THE PROVIDER SCHEMA & MODEL ---
+// Updated to support new users entering their own years of experience and booking states
 const ProviderSchema = new mongoose.Schema({
   name: { type: String, required: true },
   skill: { type: String, required: true },
   skills: [{ type: String }],
   location: { type: String, required: true },
   phoneNumber: { type: String, required: true },
-  bio: { type: String }
+  bio: { type: String },
+  experience: { type: Number, default: 0 }, // Holds incoming years cleanly
+  isAvailable: { type: Boolean, default: true } // Manages client-side status toggles
 }, { timestamps: true });
 
 const Provider = mongoose.model('Provider', ProviderSchema);
@@ -51,7 +90,7 @@ const Provider = mongoose.model('Provider', ProviderSchema);
 
 // --- YOUR API ROUTES ---
 
-// 1. POST Route: Create a professional profile
+// 1. POST Route: Create a professional profile (Handles years of experience dynamically)
 app.post('/api/providers', async (req, res) => {
   try {
     const newProvider = new Provider(req.body);
@@ -111,6 +150,21 @@ app.put('/api/providers/:id', async (req, res) => {
   }
 });
 
+// 3.5 PATCH Route: Quick-patch booking states or details inline
+app.patch('/api/providers/:id', async (req, res) => {
+  try {
+    const updatedProvider = await Provider.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true }
+    );
+    if (!updatedProvider) return res.status(404).json({ message: "Provider not found" });
+    res.status(200).json(updatedProvider);
+  } catch (error) {
+    res.status(400).json({ message: "Failed to patch profile", error: error.message });
+  }
+});
+
 // 4. DELETE Route: Remove a provider profile by ID
 app.delete('/api/providers/:id', async (req, res) => {
   try {
@@ -139,6 +193,7 @@ app.use((req, res, next) => {
   console.log(`📡 Incoming Request: ${req.method} request sent to ${req.url}`);
   next();
 });
+
 // Start listening for incoming traffic
 app.listen(PORT, () => {
   console.log(`🚀 Server actively listening on port ${PORT}`);

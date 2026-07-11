@@ -9,7 +9,7 @@ const providerSchema = new mongoose.Schema({
   skill: {
     type: String,
     required: [true, 'A specific technical skill is required'],
-    enum: ['Plumber', 'Electrician', 'Mechanic', 'Cleaning Services', 'Painter'] // Limits entries to our valid app tags
+    enum: ['Plumber', 'Electrician', 'Mechanic', 'Cleaning Services', 'Painter'] 
   },
   location: {
     type: String,
@@ -19,13 +19,17 @@ const providerSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Years of experience field is required']
   },
+  phoneNumber: {
+    type: String,
+    required: [true, 'Phone number is required']
+  },
   bio: {
     type: String,
     required: [true, 'A portfolio biography description is required']
   },
   rating: {
     type: String,
-    default: '5.0 ★' // Brand new users automatically kick off with a perfect rating entry
+    default: '5.0 ★' 
   },
   reviews: [
     {
@@ -33,10 +37,19 @@ const providerSchema = new mongoose.Schema({
       comment: String,
       stars: String
     }
+  ],
+  // 📆 The Booking Tracker Feature
+  bookings: [
+    {
+      clientName: String,
+      bookingDate: String,
+      status: {
+        type: String,
+        enum: ['Pending', 'Confirmed', 'Completed'],
+        default: 'Pending'
+      }
+    }
   ]
-}, { 
-  timestamps: true // Automatically generates createdAt and updatedAt time markers for database entries
-});
-
+}, { timestamps: true });
 const Provider = mongoose.model('Provider', providerSchema);
 export default Provider;
