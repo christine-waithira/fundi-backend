@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fundi Provider Dashboard</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --dark: #1e293b;
+      --light: #f8fafc;
+      --border: #e2e8f0;
+    }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: var(--light);
+      color: var(--dark);
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 30px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 10px;
+    }
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    @media (min-width: 768px) {
+      .main-grid { grid-template-columns: 350px 1fr; }
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border: 1px solid var(--border);
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      width: 100%;
+    }
+    button:hover { background-color: #1d4ed8; }
+    .provider-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+    @media (min-width: 900px) {
+      .provider-list { grid-template-columns: 1fr 1fr; }
+    }
+    .profile-card {
+      background: white;
+      padding: 15px;
+      border-radius: 6px;
+      border-left: 5px solid var(--primary);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      position: relative;
+    }
+    .profile-card h3 { margin: 0 0 5px 0; }
+    .badge {
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .delete-btn {
+      background-color: #ef4444;
+      width: auto;
+      padding: 4px 8px;
+      font-size: 0.8rem;
+      margin-top: 10px;
+    }
+    .delete-btn:hover { background-color: #dc2626; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Fundi Service Directory</h1>
+      <p>Live Frontend-to-Backend Interface Connection</p>
+    </header>
+
+    <div class="main-grid">
+      <!-- Left Column: Registration Form -->
+      <div class="card">
+        <h2>Register New Profile</h2>
+        <form id="providerForm">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="name" required placeholder="e.g. Jane Doe">
+          </div>
+          <div class="form-group">
+            <label>Primary Skill</label>
+            <input type="text" id="skill" required placeholder="e.g. Electrician">
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" id="location" required placeholder="e.g. Kiambu">
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text" id="phoneNumber" required placeholder="e.g. +254712345678">
+          </div>
+          <div class="form-group">
+            <label>Short Bio</label>
+            <textarea id="bio" rows="3" placeholder="Describe your experience..."></textarea>
+          </div>
+          <button type="submit">Save Professional Profile</button>
+        </form>
+      </div>
+
+      <!-- Right Column: Active Profiles Container -->
+      <div>
+        <h2>Active Verified Specialists</h2>
+        <div class="provider-list" id="providersContainer">
+          <!-- Live cards will generate here dynamically -->
+          <p style="color: #64748b;">Connecting to backend engine...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Linking our custom interaction script -->
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+POST http://localhost:5000/api/providers
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "skill": "Electrician",
+  "skills": ["wiring", "lighting"],
+  "location": "Kiambu",
+  "phoneNumber": "+254712345678",
+  "bio": "Certified electrical technician."
+}
+### Get All Providers
+GET http://localhost:5000/api/providers
+
+### Filter Providers by Skill and Location
+GET http://localhost:5000/api/providers?skill=Electrician&location=Kiambu
+
+### Update an Existing Provider
+PUT http://localhost:5000/api/providers/6a500d4bc0cca87f728c29ba
+Content-Type: application/json
+
+{
+  "skill": "Master Electrician",
+  "bio": "Certified industrial and residential electrical engineer with over 5 years experience."
+}
+
+### Delete a Provider Profile
+DELETE http://localhost:5000/api/providers/6a500d4bc0cca87f728c29ba
