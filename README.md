@@ -45,3 +45,12 @@ npm start
 
 ### MongoDB Database Records
 ![Database](./screenshots/database_records.png)
+
+##  Future Improvements and roadmap
+
+To evolve this API into a production-ready, enterprise-grade system, the following developments are planned:
+
+*   **Secure Authentication:** Integrate JSON Web Tokens (JWT) and password hashing to secure service provider and customer accounts.
+*   ** Location-Based Search:** Upgrade the existing filtering system to find nearby providers based on a user's exact radius or distance.
+*   ** Smart Search:** Add typo-tolerance so users still find the right services even if they misspell a keyword. 
+*  ** Request Rate Limiting:** Protect public API endpoints from heavy traffic overhead to keep the server stable.
